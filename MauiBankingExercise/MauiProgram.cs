@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using MauiBankingExercise.Services;
+
 
 namespace MauiBankingExercise
 {
@@ -17,8 +19,9 @@ namespace MauiBankingExercise
 
 #if DEBUG
     		builder.Logging.AddDebug();
-#endif
 
+#endif
+            builder.Services.AddSingleton<SqliteDatabaseService>();
             return builder.Build();
         }
     }
