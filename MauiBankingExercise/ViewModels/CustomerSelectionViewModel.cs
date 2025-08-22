@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MauiBankingExercise.Models;
+using MauiBankingExercise.Services;
 
 namespace MauiBankingExercise.ViewModels
 {
@@ -11,13 +13,13 @@ namespace MauiBankingExercise.ViewModels
     {
         private readonly SqliteDatabaseService _dbService;
 
-        public ObservableCollection<CustomerSelectionViewModel> Customers { get; set; }
+        public ObservableCollection<Customer> Customers { get; set; }
 
         public CustomerSelectionViewModel(SqliteDatabaseService dbService)
         {
             _dbService = dbService;
 
-            Customers = new ObservableCollection<CustomerSelectionViewModel>();
+            Customers = new ObservableCollection<Customer>();
 
             LoadCustomers();
  
@@ -25,9 +27,8 @@ namespace MauiBankingExercise.ViewModels
 
         private void LoadCustomers()
         {
-            var connection = _dbService.GetConnection();
 
-            var customers = connection.Table<CustomerSelectionViewModel>().ToList();
+            var customers = connection.Table<Customer>().ToList(); 
 
             Customers.Clear();
             foreach (var customer in customers)

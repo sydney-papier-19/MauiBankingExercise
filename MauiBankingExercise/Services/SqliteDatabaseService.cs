@@ -13,23 +13,43 @@ namespace MauiBankingExercise.Services
 {
     public class SqliteDatabaseService 
     {
+        private static SqliteDatabaseService _instance;
+
+        public static SqliteDatabaseService GetInstance()
+        {
+            
+                if (_instance == null)
+                {
+                    _instance = new SqliteDatabaseService();
+                }
+                return _instance;
+            
+        }
+
         private readonly SQLiteConnection _connection;
 
+        public string GetDbPath()
+        {
+            string filename = "banking.db";
+            string pathToDb = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(pathToDb, filename);
+        }
         public SqliteDatabaseService()
         {
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "banking.db3");
 
-            _connection = new SQLiteConnection(dbPath);
+            _connection = new SQLiteConnection(GetDbPath());
 
-            _connection.CreateTable<Customer>();
-
-            if (_connection.Table<Customer>().Any())
-            {
-                BankingSeeder.Seed(_connection);
-            }
+           
+            BankingSeeder.Seed(_connection);
         
         }
 
-        public SQLiteConnection GetConnection() => _connection;
+        public List<Customer> GetCustomers()
+        { 
+            return _connection.Table<Customer>().ToList();
+
+        }
+
+
     }
 }
